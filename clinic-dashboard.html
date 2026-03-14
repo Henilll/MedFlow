@@ -1,0 +1,1382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>MedFlow Clinic</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#07100f;--sur:#0d1a18;--ele:#132320;--hov:#1a2e2b;
+  --bor:rgba(255,255,255,0.08);--bora:rgba(45,212,191,0.3);
+  --t1:#dff0ed;--t2:#6fa39d;--t3:#3d6b65;
+  --teal:#2dd4bf;--teal2:#0d9488;--amber:#f59e0b;
+  --red:#f87171;--green:#34d399;--purple:#a78bfa;--blue:#60a5fa;
+}
+html,body{height:100%;font-family:'Inter',sans-serif;font-size:13px;background:var(--bg);color:var(--t1);overflow:hidden}
+::-webkit-scrollbar{width:3px}::-webkit-scrollbar-thumb{background:var(--hov);border-radius:2px}
+#app{display:flex;height:100vh}
+#sidebar{width:215px;min-width:215px;background:var(--sur);border-right:1px solid var(--bor);display:flex;flex-direction:column;transition:width .2s}
+#main{flex:1;overflow-y:auto;position:relative}
+.inner{padding:24px 28px;max-width:1120px}
+.sb-head{padding:16px;border-bottom:1px solid var(--bor);display:flex;align-items:center;gap:10px}
+.logo{width:30px;height:30px;border-radius:8px;background:linear-gradient(135deg,var(--teal),var(--teal2));display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.brand{font-size:14px;font-weight:700;letter-spacing:-.3px}
+.portal{font-size:10px;color:var(--t3);margin-top:1px}
+.sb-user{margin:10px;padding:10px;background:var(--ele);border-radius:10px;display:flex;align-items:center;gap:8px}
+.sav{width:30px;height:30px;border-radius:50%;background:rgba(45,212,191,0.15);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.un{font-size:11px;font-weight:600}.ur{font-size:10px;color:var(--t3);margin-top:1px;text-transform:capitalize}
+.sb-nav{flex:1;padding:6px;overflow-y:auto}
+.ng{font-size:9px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--t3);padding:8px 10px 3px}
+.ni{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--t2);font-size:12px;font-weight:500;border-left:2px solid transparent;margin-bottom:1px;transition:all .12s}
+.ni:hover{background:var(--ele);color:var(--t1)}.ni.on{background:rgba(45,212,191,0.1);color:var(--teal);border-left-color:var(--teal)}
+.ni svg{width:14px;height:14px;flex-shrink:0}
+.sb-foot{padding:10px;border-top:1px solid var(--bor)}
+.logout{display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;cursor:pointer;color:var(--t3);font-size:12px;transition:all .12s}
+.logout:hover{background:var(--ele);color:var(--red)}
+.ph{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:22px;flex-wrap:wrap;gap:10px}
+.pt{font-size:20px;font-weight:700;letter-spacing:-.4px}.ps{font-size:12px;color:var(--t3);margin-top:3px}
+.ha{display:flex;gap:7px;align-items:center}
+.sg{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:22px}
+.sc{background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:16px;position:relative;overflow:hidden;transition:border-color .2s;cursor:default}
+.sc:hover{border-color:var(--bora)}
+.sc::after{content:'';position:absolute;top:-16px;right:-16px;width:70px;height:70px;border-radius:50%;background:var(--c,var(--teal));opacity:.07;pointer-events:none}
+.si{width:32px;height:32px;border-radius:9px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;background:color-mix(in srgb,var(--c,var(--teal)) 15%,transparent);color:var(--c,var(--teal))}
+.sv{font-size:24px;font-weight:700;letter-spacing:-.5px}.sl{font-size:11px;color:var(--t2);margin-top:2px}
+.btn{display:inline-flex;align-items:center;gap:5px;padding:7px 13px;border-radius:8px;font-size:11px;font-weight:600;font-family:inherit;cursor:pointer;border:1px solid var(--bor);background:transparent;color:var(--t2);transition:all .12s;white-space:nowrap}
+.btn:hover{opacity:.8}.btn:active{transform:scale(.97)}
+.btn-p{background:linear-gradient(135deg,var(--teal),var(--teal2));color:#07100f;border-color:transparent}
+.btn-a{background:rgba(245,158,11,.12);color:var(--amber);border-color:rgba(245,158,11,.25)}
+.btn-r{background:rgba(248,113,113,.12);color:var(--red);border-color:rgba(248,113,113,.25)}
+.btn-g{background:rgba(52,211,153,.12);color:var(--green);border-color:rgba(52,211,153,.25)}
+.btn-b{background:rgba(96,165,250,.12);color:var(--blue);border-color:rgba(96,165,250,.25)}
+.btn-pu{background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.25)}
+.btn-sm{padding:4px 9px;font-size:10px;border-radius:6px}
+.fb{background:var(--sur);border:1px solid var(--bor);border-radius:12px;padding:12px 14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:14px}
+.sw{position:relative;flex:1;min-width:180px}
+.sw svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--t3);width:13px;height:13px}
+.si2{width:100%;padding:7px 10px 7px 32px;background:var(--ele);border:1px solid var(--bor);border-radius:8px;color:var(--t1);font-family:inherit;font-size:12px}
+.si2:focus{outline:none;border-color:var(--teal)}
+.pills{display:flex;gap:5px;flex-wrap:wrap}
+.pill{padding:4px 10px;border-radius:16px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--bor);background:transparent;color:var(--t3);font-family:inherit;transition:all .12s}
+.pill.on{background:rgba(45,212,191,.1);color:var(--teal);border-color:rgba(45,212,191,.3)}
+.tw{background:var(--sur);border:1px solid var(--bor);border-radius:14px;overflow:hidden}
+table{width:100%;border-collapse:collapse}
+th{background:var(--ele);padding:9px 13px;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);text-align:left;border-bottom:1px solid var(--bor)}
+td{padding:10px 13px;font-size:12px;color:var(--t2);border-bottom:1px solid var(--bor);vertical-align:middle}
+tr:last-child td{border-bottom:none}tr:hover td{background:var(--ele)}
+.pc{display:flex;align-items:center;gap:9px}
+.ca{width:28px;height:28px;border-radius:50%;background:rgba(45,212,191,.1);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.cn{font-size:12px;font-weight:600;color:var(--t1)}.cp{font-size:10px;color:var(--t3);margin-top:1px}
+.ra{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.cards{display:flex;flex-direction:column;gap:8px}
+.card{background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:14px 16px;display:grid;grid-template-columns:44px 1fr;gap:12px;align-items:start;transition:border-color .15s}
+.card:hover{border-color:var(--bora)}
+.cav{width:38px;height:38px;border-radius:50%;background:rgba(45,212,191,.1);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.ctm{font-size:9px;color:var(--t3);text-align:center;margin-top:3px}
+.cname{font-size:13px;font-weight:600;color:var(--t1)}.cmeta{font-size:11px;color:var(--t3);margin-top:2px}
+.cbadges{display:flex;gap:5px;flex-wrap:wrap;margin-top:6px;align-items:center}
+.cacts{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.payblock{margin-top:8px;padding:9px 12px;border-radius:8px;font-size:11px;line-height:1.6}
+.payblock.online{background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.18);color:var(--blue)}
+.payblock.cash{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.18);color:var(--green)}
+.payblock.pending{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.18);color:var(--amber)}
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 8px;border-radius:14px;font-size:9px;font-weight:700;white-space:nowrap}
+.bdg-dot{width:4px;height:4px;border-radius:50%;background:currentColor;opacity:.8}
+.b-sch{background:rgba(96,165,250,.12);color:var(--blue)}.b-com{background:rgba(52,211,153,.12);color:var(--green)}
+.b-nos{background:rgba(248,113,113,.12);color:var(--red)}.b-can{background:rgba(113,113,122,.15);color:#a1a1aa}
+.b-res{background:rgba(245,158,11,.12);color:var(--amber)}.b-cas{background:rgba(52,211,153,.12);color:var(--green)}
+.b-pen{background:rgba(245,158,11,.12);color:var(--amber)}
+.tabs{display:flex;gap:5px;margin-bottom:16px;align-items:center;flex-wrap:wrap}
+.tab{padding:6px 14px;border-radius:8px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--bor);background:transparent;color:var(--t2);font-family:inherit;transition:all .12s}
+.tab.on{background:rgba(45,212,191,.1);color:var(--teal);border-color:rgba(45,212,191,.3)}
+.tc{margin-left:auto;font-size:10px;color:var(--t3)}
+.ov{position:fixed;inset:0;z-index:100;background:rgba(7,16,15,.85);backdrop-filter:blur(4px);display:flex;align-items:center;justify-content:center;padding:16px}
+.ov.h{display:none}
+.mb{width:100%;max-width:480px;max-height:90vh;overflow-y:auto;background:var(--sur);border:1px solid var(--bora);border-radius:18px;animation:mi .2s ease}
+.mb.w{max-width:560px}.mb.xl{max-width:680px}.mb.xxl{max-width:820px}
+@keyframes mi{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.mh{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid var(--bor);position:sticky;top:0;background:var(--sur);z-index:1}
+.mt{font-size:14px;font-weight:700}
+.mx{width:27px;height:27px;border-radius:7px;background:var(--ele);border:none;cursor:pointer;color:var(--t2);font-size:13px;display:flex;align-items:center;justify-content:center}
+.mx:hover{color:var(--t1)}.mbody{padding:20px}
+.fg{margin-bottom:13px}.fr{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:13px}
+label{display:block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t2);margin-bottom:5px}
+input,select,textarea{width:100%;padding:8px 11px;background:var(--bg);border:1px solid var(--bor);border-radius:8px;color:var(--t1);font-family:inherit;font-size:12px;transition:border-color .12s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:var(--teal);box-shadow:0 0 0 2px rgba(45,212,191,.08)}
+select option{background:var(--ele)}textarea{resize:vertical;min-height:80px}
+.fa{display:flex;gap:8px;justify-content:flex-end;margin-top:18px}
+.ib{background:var(--ele);border-radius:10px;padding:12px;margin-bottom:14px}
+.ibn{font-size:13px;font-weight:600;color:var(--t1)}.ibm{font-size:11px;color:var(--t3);margin-top:2px}
+.dr{display:flex;gap:10px;margin-bottom:9px}
+.dl{font-size:11px;color:var(--t3);width:110px;flex-shrink:0;padding-top:1px}.dv{font-size:12px;color:var(--t2);flex:1}
+.pay-panel{border-radius:10px;padding:12px 14px;margin-bottom:14px;font-size:12px}
+.pay-panel.online{background:rgba(96,165,250,.07);border:1px solid rgba(96,165,250,.2);color:var(--blue)}
+.pay-panel.cash{background:rgba(52,211,153,.07);border:1px solid rgba(52,211,153,.2);color:var(--green)}
+.pay-panel.pending{background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);color:var(--amber)}
+.pay-panel-title{font-weight:700;font-size:13px;margin-bottom:4px}
+.pay-panel-sub{opacity:.8;font-size:11px}
+#toast{position:fixed;bottom:20px;left:20px;z-index:500;padding:11px 18px;border-radius:10px;font-size:12px;font-weight:600;background:rgba(45,212,191,.12);color:var(--teal);border:1px solid rgba(45,212,191,.3);transition:all .25s;opacity:0;transform:translateY(6px);pointer-events:none}
+#toast.sh{opacity:1;transform:translateY(0)}
+#load{position:fixed;inset:0;z-index:400;background:rgba(7,16,15,.9);backdrop-filter:blur(3px);display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px}
+#load.sh{display:flex}
+.spin{width:32px;height:32px;border:2.5px solid rgba(45,212,191,.2);border-top-color:var(--teal);border-radius:50%;animation:sp .65s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+#load p{font-size:12px;color:var(--t2)}
+#login{position:fixed;inset:0;z-index:300;background:var(--bg);display:flex;align-items:center;justify-content:center}
+#login.h{display:none}
+.lg{width:100%;max-width:390px;background:var(--sur);border:1px solid var(--bor);border-radius:20px;padding:32px}
+.lg-logo{display:flex;align-items:center;gap:10px;margin-bottom:24px}
+.lg-brand{font-size:20px;font-weight:800;letter-spacing:-.4px}.lg-sub{font-size:11px;color:var(--t3)}
+.lg-title{font-size:18px;font-weight:700;margin-bottom:5px}.lg-desc{font-size:12px;color:var(--t3);margin-bottom:22px}
+.lg-err{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.2);border-radius:8px;padding:9px 12px;font-size:12px;margin-bottom:12px;display:none}
+.lg-err.sh{display:block}
+.demo{background:var(--ele);border-radius:9px;padding:11px 13px;margin-top:18px;font-size:10px;color:var(--t3);line-height:1.9}
+.demo b{color:var(--t2)}
+.live{display:flex;align-items:center;gap:6px;padding:5px 11px;border-radius:16px;font-size:10px;font-weight:600;background:rgba(45,212,191,.08);color:var(--teal);border:1px solid rgba(45,212,191,.18)}
+.ldot{width:5px;height:5px;border-radius:50%;background:var(--teal);animation:lp 2s ease infinite}
+@keyframes lp{0%,100%{opacity:1}50%{opacity:.4}}
+.empty{background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:50px 20px;text-align:center;color:var(--t3);font-size:12px}
+.empty-ico{font-size:32px;margin-bottom:10px}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.fi{animation:fu .3s ease both}
+.cal-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-bottom:8px}
+.cal-hdr{text-align:center;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t3);padding:6px 0}
+.cal-day{background:var(--sur);border:1px solid var(--bor);border-radius:10px;padding:8px;min-height:70px;cursor:pointer;transition:all .15s;position:relative}
+.cal-day:hover{border-color:var(--bora);background:var(--ele)}
+.cal-day.empty-day{background:transparent;border-color:transparent;cursor:default}
+.cal-day.today{border-color:var(--teal);background:rgba(45,212,191,.06)}
+.cal-day.has-apts{border-color:rgba(45,212,191,.2)}
+.cal-dn{font-size:12px;font-weight:600;color:var(--t2);margin-bottom:4px}
+.cal-day.today .cal-dn{color:var(--teal)}
+.cal-dot-row{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}
+.cal-dot{width:6px;height:6px;border-radius:50%}
+.cal-count{font-size:9px;color:var(--t3);margin-top:3px}
+.cal-nav{display:flex;align-items:center;gap:12px;margin-bottom:16px}
+.cal-month{font-size:16px;font-weight:700}
+.cal-nav-btn{background:var(--ele);border:1px solid var(--bor);border-radius:8px;width:30px;height:30px;cursor:pointer;color:var(--t2);font-size:14px;display:flex;align-items:center;justify-content:center;transition:all .12s}
+.cal-nav-btn:hover{border-color:var(--teal);color:var(--teal)}
+.chart-card{background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:18px;margin-bottom:16px}
+.chart-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.chart-sub{font-size:11px;color:var(--t3);margin-bottom:16px}
+.bars{display:flex;align-items:flex-end;gap:8px;height:140px;padding-bottom:24px;position:relative}
+.bar-wrap{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;height:100%;justify-content:flex-end}
+.bar{width:100%;border-radius:5px 5px 0 0;min-height:2px;transition:height .4s ease;background:var(--teal);opacity:.75;cursor:pointer;position:relative}
+.bar:hover{opacity:1}
+.bar-val{font-size:9px;color:var(--t2);text-align:center;position:absolute;top:-16px;left:0;right:0;opacity:0;transition:opacity .15s}
+.bar:hover .bar-val{opacity:1}
+.bar-lbl{font-size:9px;color:var(--t3);position:absolute;bottom:-18px;left:0;right:0;text-align:center}
+.donut-wrap{display:flex;align-items:center;gap:24px}
+.donut-legend{display:flex;flex-direction:column;gap:10px}
+.legend-item{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--t2)}
+.legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0}
+.legend-val{font-weight:700;color:var(--t1);margin-left:auto}
+.ana-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.config-section{background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:20px;margin-bottom:16px}
+.config-section-title{font-size:13px;font-weight:700;margin-bottom:4px}
+.config-section-sub{font-size:11px;color:var(--t3);margin-bottom:16px}
+.date-chips{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.date-chip{display:flex;align-items:center;gap:6px;padding:4px 10px;background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.2);border-radius:16px;font-size:11px;color:var(--red)}
+.date-chip button{background:none;border:none;cursor:pointer;color:var(--red);font-size:13px;padding:0;line-height:1;display:flex;align-items:center}
+#reminder{position:fixed;bottom:20px;right:20px;z-index:200;width:280px;background:var(--sur);border:1px solid var(--bora);border-radius:14px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.4);transition:all .3s}
+#reminder.collapsed #rem-body{display:none}
+#reminder.h{display:none}
+.rem-head{padding:10px 14px;display:flex;align-items:center;justify-content:space-between;background:rgba(45,212,191,.08);cursor:pointer;border-bottom:1px solid var(--bor)}
+.rem-title{font-size:11px;font-weight:700;color:var(--teal);display:flex;align-items:center;gap:6px}
+.rem-toggle{background:none;border:none;color:var(--t3);cursor:pointer;font-size:13px;display:flex;align-items:center}
+#rem-body{padding:10px}
+.rem-item{display:flex;gap:10px;padding:7px 0;border-bottom:1px solid var(--bor)}
+.rem-item:last-child{border-bottom:none}
+.rem-time{font-size:10px;font-weight:700;color:var(--teal);min-width:52px}
+.rem-name{font-size:11px;font-weight:600;color:var(--t1)}
+.rem-pay{font-size:10px;color:var(--t3);margin-top:1px}
+.rem-empty{font-size:11px;color:var(--t3);padding:8px 0;text-align:center}
+#refresh-bar{position:fixed;top:0;left:0;right:0;height:2px;background:var(--teal);transform-origin:left;transition:width linear;opacity:0;z-index:600}
+#refresh-bar.active{opacity:1}
+@media print{#app,#login,#load,#toast,#reminder,#refresh-bar{display:none!important}#print-area{display:block!important}}
+#print-area{display:none}
+
+/* ═══════════════════════════════════════════
+   SMART BOOK MODAL STYLES
+   ═══════════════════════════════════════════ */
+
+/* Patient search input wrapper */
+.pat-search-wrap{position:relative;margin-bottom:13px}
+.pat-search-wrap label{display:block;font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--t2);margin-bottom:5px}
+.pat-search-input-row{display:flex;gap:8px;align-items:center}
+.pat-search-input-row input{flex:1}
+
+/* Search results dropdown */
+.pat-dropdown{position:absolute;top:100%;left:0;right:0;z-index:50;background:var(--ele);border:1px solid var(--bora);border-radius:10px;margin-top:4px;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.5);display:none}
+.pat-dropdown.open{display:block}
+.pat-result{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;transition:background .1s;border-bottom:1px solid var(--bor)}
+.pat-result:last-child{border-bottom:none}
+.pat-result:hover{background:var(--hov)}
+.pat-result-av{width:28px;height:28px;border-radius:50%;background:rgba(45,212,191,.12);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;flex-shrink:0}
+.pat-result-name{font-size:12px;font-weight:600;color:var(--t1)}
+.pat-result-meta{font-size:10px;color:var(--t3);margin-top:1px}
+.pat-result-create{display:flex;align-items:center;gap:10px;padding:10px 12px;cursor:pointer;background:rgba(45,212,191,.04);transition:background .1s;color:var(--teal);font-size:12px;font-weight:600}
+.pat-result-create:hover{background:rgba(45,212,191,.1)}
+.pat-result-create svg{width:14px;height:14px;flex-shrink:0}
+
+/* Selected patient chip */
+.pat-selected{display:flex;align-items:center;gap:10px;padding:10px 12px;background:rgba(45,212,191,.07);border:1px solid rgba(45,212,191,.25);border-radius:10px;margin-bottom:13px}
+.pat-selected-av{width:32px;height:32px;border-radius:50%;background:rgba(45,212,191,.15);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;flex-shrink:0}
+.pat-selected-info{flex:1}
+.pat-selected-name{font-size:13px;font-weight:700;color:var(--t1)}
+.pat-selected-meta{font-size:10px;color:var(--t3);margin-top:2px}
+.pat-selected-change{background:none;border:1px solid var(--bor);border-radius:6px;padding:3px 8px;font-size:10px;color:var(--t3);cursor:pointer;font-family:inherit;transition:all .12s;white-space:nowrap}
+.pat-selected-change:hover{color:var(--t1);border-color:var(--teal)}
+.pat-new-badge{display:inline-flex;align-items:center;gap:4px;padding:2px 7px;border-radius:10px;font-size:9px;font-weight:700;background:rgba(167,139,250,.15);color:var(--purple);margin-left:6px}
+
+/* New patient form panel */
+.new-pat-panel{background:rgba(167,139,250,.05);border:1px solid rgba(167,139,250,.2);border-radius:12px;padding:14px;margin-bottom:13px}
+.new-pat-panel-title{font-size:11px;font-weight:700;color:var(--purple);display:flex;align-items:center;gap:6px;margin-bottom:12px}
+.new-pat-panel-title svg{width:13px;height:13px}
+
+/* Step indicator */
+.book-steps{display:flex;gap:0;margin-bottom:18px;border-radius:8px;overflow:hidden;border:1px solid var(--bor)}
+.book-step{flex:1;padding:8px 12px;text-align:center;font-size:10px;font-weight:600;color:var(--t3);background:var(--ele);transition:all .15s;position:relative}
+.book-step.active{background:rgba(45,212,191,.1);color:var(--teal)}
+.book-step.done{background:rgba(52,211,153,.08);color:var(--green)}
+.book-step-num{display:block;font-size:14px;font-weight:700;margin-bottom:1px}
+
+/* Divider */
+.form-divider{border:none;border-top:1px solid var(--bor);margin:14px 0}
+
+/* No results hint */
+.pat-no-results{padding:12px;text-align:center;font-size:11px;color:var(--t3)}
+</style>
+</head>
+<body>
+
+<!-- LOGIN -->
+<div id="login">
+  <div class="lg fi">
+    <div class="lg-logo">
+      <div class="logo"><svg width="15" height="15" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v10l9 5 9-5V7L12 2z" stroke="white" stroke-width="2.2" stroke-linejoin="round"/></svg></div>
+      <div><div class="lg-brand">MedFlow</div><div class="lg-sub">Clinic Management</div></div>
+    </div>
+    <div class="lg-title">Welcome back</div>
+    <div class="lg-desc">Sign in to your dashboard</div>
+    <div class="lg-err" id="lerr">Invalid email or password</div>
+    <div class="fg"><label>Email</label><input id="lem" type="email" value="doctor@clinic.com"/></div>
+    <div class="fg"><label>Password</label><input id="lpw" type="password" value="doctor123"/></div>
+    <button class="btn btn-p" style="width:100%;justify-content:center;padding:10px" onclick="doLogin()">Sign In →</button>
+    <div class="demo"><b>Demo:</b><br/>🩺 doctor@clinic.com / doctor123<br/>🧾 reception@clinic.com / reception123</div>
+  </div>
+</div>
+
+<!-- LOADING -->
+<div id="load"><div class="spin"></div><p id="load-msg">Loading from Google Sheets…</p></div>
+
+<!-- AUTO-REFRESH BAR -->
+<div id="refresh-bar"></div>
+
+<!-- APP -->
+<div id="app" style="display:none">
+  <div id="sidebar">
+    <div class="sb-head">
+      <div class="logo"><svg width="14" height="14" viewBox="0 0 24 24" fill="none"><path d="M12 2L3 7v10l9 5 9-5V7L12 2z" stroke="white" stroke-width="2.2" stroke-linejoin="round"/></svg></div>
+      <div><div class="brand">MedFlow</div><div class="portal" id="sp">Doctor Portal</div></div>
+    </div>
+    <div class="sb-user"><div class="sav" id="sav"></div><div><div class="un" id="snm"></div><div class="ur" id="srl"></div></div></div>
+    <nav class="sb-nav" id="snav"></nav>
+    <div class="sb-foot">
+      <div style="font-size:10px;color:var(--t3);padding:4px 10px;margin-bottom:4px" id="refresh-status"></div>
+      <div class="logout" onclick="doLogout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"/></svg>Sign out
+      </div>
+    </div>
+  </div>
+  <div id="main"><div class="inner fi" id="pg"></div></div>
+</div>
+
+<!-- REMINDER WIDGET -->
+<div id="reminder" class="h">
+  <div class="rem-head" onclick="toggleReminder()">
+    <div class="rem-title">🔔 <span id="rem-title-txt">Today's Queue</span></div>
+    <button class="rem-toggle" id="rem-tog">▾</button>
+  </div>
+  <div id="rem-body"></div>
+</div>
+
+<!-- MODALS -->
+<!-- Detail -->
+<div class="ov h" id="m-detail">
+  <div class="mb w"><div class="mh"><div class="mt">Appointment Detail</div><div style="display:flex;gap:6px"><button class="btn btn-sm" onclick="printSlip()" style="font-size:10px">🖨 Print</button><button class="mx" onclick="cm('m-detail')">✕</button></div></div><div class="mbody" id="m-detail-body"></div></div>
+</div>
+<!-- Status confirm -->
+<div class="ov h" id="m-status">
+  <div class="mb">
+    <div class="mh"><div class="mt" id="mst-title">Update Status</div><button class="mx" onclick="cm('m-status')">✕</button></div>
+    <div class="mbody"><div class="ib" id="mst-info"></div><p style="font-size:12px;color:var(--t2);margin-bottom:18px" id="mst-msg"></p><div class="fa"><button class="btn" onclick="cm('m-status')">Cancel</button><button class="btn" id="mst-btn" onclick="confirmStatus()">Confirm</button></div></div>
+  </div>
+</div>
+<!-- Reschedule -->
+<div class="ov h" id="m-resc">
+  <div class="mb">
+    <div class="mh"><div class="mt">Reschedule</div><button class="mx" onclick="cm('m-resc')">✕</button></div>
+    <div class="mbody"><div class="ib" id="mres-info"></div><div class="fr"><div><label>New Date</label><input type="date" id="r-date"/></div><div><label>New Time</label><input type="time" id="r-time"/></div></div><div class="fa"><button class="btn" onclick="cm('m-resc')">Cancel</button><button class="btn btn-p" onclick="submitResc()">Reschedule</button></div></div>
+  </div>
+</div>
+<!-- New Patient (standalone) -->
+<div class="ov h" id="m-pat">
+  <div class="mb w">
+    <div class="mh"><div class="mt">Add New Patient</div><button class="mx" onclick="cm('m-pat')">✕</button></div>
+    <div class="mbody">
+      <div class="fr"><div><label>Name *</label><input id="np-name" placeholder="Ahmad Rizal"/></div><div><label>WhatsApp *</label><input id="np-wa" placeholder="+60123456789"/></div></div>
+      <div class="fr"><div><label>Age</label><input id="np-age" type="number" placeholder="30"/></div><div><label>Gender</label><select id="np-gen"><option value="">Select…</option><option>Male</option><option>Female</option><option>Other</option></select></div></div>
+      <div class="fa"><button class="btn" onclick="cm('m-pat')">Cancel</button><button class="btn btn-p" onclick="submitPatient()">Add Patient</button></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════
+     SMART BOOK APPOINTMENT MODAL
+     ══════════════════════════════════════ -->
+<div class="ov h" id="m-book">
+  <div class="mb w">
+    <div class="mh">
+      <div class="mt">Book Appointment</div>
+      <button class="mx" onclick="closeBookModal()">✕</button>
+    </div>
+    <div class="mbody">
+
+      <!-- Step indicator -->
+      <div class="book-steps">
+        <div class="book-step active" id="bstep-1"><span class="book-step-num">1</span>Patient</div>
+        <div class="book-step" id="bstep-2"><span class="book-step-num">2</span>Schedule</div>
+      </div>
+
+      <!-- ── STEP 1: Patient selection ── -->
+      <div id="book-step1">
+        <div class="pat-search-wrap">
+          <label>Search Existing Patient</label>
+          <div style="position:relative">
+            <div style="position:absolute;left:10px;top:50%;transform:translateY(-50%);color:var(--t3);pointer-events:none">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+            </div>
+            <input id="ba-search" style="padding-left:32px" placeholder="Type name or WhatsApp to search…" oninput="bookSearch(this.value)" autocomplete="off"/>
+            <div class="pat-dropdown" id="ba-dropdown"></div>
+          </div>
+        </div>
+
+        <!-- Selected patient display -->
+        <div id="ba-selected-wrap" style="display:none"></div>
+
+        <!-- OR divider -->
+        <div id="ba-or-divider" style="display:flex;align-items:center;gap:10px;margin:14px 0">
+          <div style="flex:1;border-top:1px solid var(--bor)"></div>
+          <span style="font-size:10px;color:var(--t3);font-weight:600">OR</span>
+          <div style="flex:1;border-top:1px solid var(--bor)"></div>
+        </div>
+
+        <!-- Create new patient panel -->
+        <div id="ba-new-panel">
+          <div class="new-pat-panel">
+            <div class="new-pat-panel-title">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+              Create New Patient
+            </div>
+            <div class="fr">
+              <div><label>Name *</label><input id="ba-new-name" placeholder="Full name"/></div>
+              <div><label>WhatsApp *</label><input id="ba-new-wa" placeholder="+60123456789"/></div>
+            </div>
+            <div class="fr" style="margin-bottom:0">
+              <div><label>Age</label><input id="ba-new-age" type="number" placeholder="30"/></div>
+              <div><label>Gender</label><select id="ba-new-gen"><option value="">Select…</option><option>Male</option><option>Female</option><option>Other</option></select></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="fa" style="margin-top:10px">
+          <button class="btn" onclick="closeBookModal()">Cancel</button>
+          <button class="btn btn-p" onclick="bookStep1Next()">Next: Schedule →</button>
+        </div>
+      </div>
+
+      <!-- ── STEP 2: Date, time & payment ── -->
+      <div id="book-step2" style="display:none">
+        <!-- Confirmed patient chip -->
+        <div id="book-pat-chip" style="margin-bottom:16px"></div>
+
+        <div class="fr">
+          <div><label>Date *</label><input type="date" id="ba-date"/></div>
+          <div><label>Time *</label><input type="time" id="ba-time"/></div>
+        </div>
+        <div class="fg">
+          <label>Payment Method</label>
+          <select id="ba-pay">
+            <option value="Cash">💵 Cash — collected in clinic · ₹1500</option>
+            <option value="Stripe">💳 Online / Stripe · ₹1500</option>
+          </select>
+        </div>
+        <div class="fa">
+          <button class="btn" onclick="bookStep2Back()">← Back</button>
+          <button class="btn btn-p" onclick="submitBook()">✓ Book Appointment</button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- Cash -->
+<div class="ov h" id="m-cash">
+  <div class="mb">
+    <div class="mh"><div class="mt">Confirm Cash Collection</div><button class="mx" onclick="cm('m-cash')">✕</button></div>
+    <div class="mbody"><div class="ib" id="mcash-info"></div><div class="pay-panel cash"><div class="pay-panel-title">💵 Cash Payment — ₹1500</div><div class="pay-panel-sub">Confirm physical collection at clinic counter</div></div><div class="fa"><button class="btn" onclick="cm('m-cash')">Cancel</button><button class="btn btn-g" onclick="confirmCash()">✓ Mark Collected</button></div></div>
+  </div>
+</div>
+<!-- Patient History -->
+<div class="ov h" id="m-history">
+  <div class="mb xl">
+    <div class="mh"><div class="mt">Patient History</div><button class="mx" onclick="cm('m-history')">✕</button></div>
+    <div class="mbody" id="m-history-body"></div>
+  </div>
+</div>
+<!-- Day appointments (Calendar) -->
+<div class="ov h" id="m-day">
+  <div class="mb w">
+    <div class="mh"><div class="mt" id="m-day-title">Appointments</div><button class="mx" onclick="cm('m-day')">✕</button></div>
+    <div class="mbody" id="m-day-body"></div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<div id="print-area"></div>
+
+<script>
+/* ══════════════════════════════════════════════════
+   CONFIG
+   ══════════════════════════════════════════════════ */
+const SHEETDB = 'https://sheetdb.io/api/v1/hrak3nssz9z0o';
+const SH = { patients:'patients', appts:'Appointments', config:'Config' };
+const USERS = [
+  { email:'doctor@clinic.com',    pw:'doctor123',    name:'Dr. Sarah Lim', role:'doctor' },
+  { email:'reception@clinic.com', pw:'reception123', name:'Nurul Ain',      role:'receptionist' },
+];
+
+let CU=null, PAGE='dash', TAB='today', SF='all', SQ='', SEL=null, SEL_S='';
+let APTS=[], PATS=[], CFG={};
+let CAL_YEAR=new Date().getFullYear(), CAL_MON=new Date().getMonth();
+let PRINT_APT=null;
+let autoRefreshTimer=null, refreshCountdown=60;
+
+/* ══════════════════════════════════════════════════
+   SMART BOOK STATE
+   ══════════════════════════════════════════════════ */
+// Holds selected existing patient OR null for new
+let BOOK_PAT = null;   // { pid, name, wa, age, gender, isNew }
+
+/* ══════════════════════════════════════════════════
+   SHEETDB API
+   ══════════════════════════════════════════════════ */
+async function apiGet(sheet){
+  const r=await fetch(`${SHEETDB}?sheet=${enc(sheet)}`);
+  if(!r.ok) throw new Error(`Sheet read failed (${r.status})`);
+  return r.json();
+}
+async function apiPatch(sheet,col,val,data){
+  const r=await fetch(`${SHEETDB}/${enc(col)}/${enc(val)}?sheet=${enc(sheet)}`,{
+    method:'PATCH',headers:{'Content-Type':'application/json'},body:JSON.stringify({data})
+  });
+  if(!r.ok) throw new Error(`Sheet update failed (${r.status})`);
+  return r.json();
+}
+async function apiPost(sheet,row){
+  const r=await fetch(`${SHEETDB}?sheet=${enc(sheet)}`,{
+    method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({data:[row]})
+  });
+  if(!r.ok) throw new Error(`Sheet create failed (${r.status})`);
+  return r.json();
+}
+
+/* ══════════════════════════════════════════════════
+   LOAD ALL DATA
+   ══════════════════════════════════════════════════ */
+async function loadAll(silent=false){
+  if(!silent) setLoad(true,'Loading from Google Sheets…');
+  try{
+    const [ra,rp,rc]=await Promise.all([apiGet(SH.appts),apiGet(SH.patients),apiGet(SH.config)]);
+    PATS=(rp||[]).map(r=>({patient_id:r.patient_id||'',name:r.name||'',wa:r.whatsapp_number||'',age:r.age||'',gender:r.gender||''}));
+    const pmap={};
+    PATS.forEach(p=>{if(p.patient_id) pmap[p.patient_id]=p;});
+    APTS=(ra||[]).map(r=>{
+      const pat=pmap[r.patient_id]||{};
+      return{id:r.appointment_id||'',pid:r.patient_id||'',name:pat.name||'',wa:pat.wa||r.whatsapp_number||'',age:pat.age||'',gender:pat.gender||'',date:r.date||'',time:r.time||'',pay_method:r.payment_method||'',pay_status:r.payment_status||'Pending',status:r.status||'Scheduled',stripe_pi:r.stripe_payment_intent||''};
+    });
+    CFG=(rc&&rc[0])?rc[0]:{};
+  }catch(err){toast('⚠ '+err.message);}
+  if(!silent) setLoad(false);
+  updateReminder();
+}
+
+/* ══════════════════════════════════════════════════
+   AUTO-REFRESH
+   ══════════════════════════════════════════════════ */
+function startAutoRefresh(){
+  stopAutoRefresh();
+  refreshCountdown=60;
+  updateRefreshStatus();
+  autoRefreshTimer=setInterval(async()=>{
+    refreshCountdown--;
+    updateRefreshStatus();
+    if(refreshCountdown<=0){
+      refreshCountdown=60;
+      animRefreshBar();
+      await loadAll(true);
+      render();
+      toast('↻ Auto-refreshed');
+    }
+  },1000);
+}
+function stopAutoRefresh(){ if(autoRefreshTimer){ clearInterval(autoRefreshTimer); autoRefreshTimer=null; } }
+function updateRefreshStatus(){ const el=$('refresh-status'); if(el) el.textContent=`↻ refresh in ${refreshCountdown}s`; }
+function animRefreshBar(){
+  const bar=$('refresh-bar'); bar.style.width='0'; bar.classList.add('active');
+  bar.style.transition='width 1s linear'; setTimeout(()=>bar.style.width='100%',50);
+  setTimeout(()=>{ bar.classList.remove('active'); bar.style.width='0'; },1200);
+}
+
+/* ══════════════════════════════════════════════════
+   PAYMENT INFO
+   ══════════════════════════════════════════════════ */
+function payInfo(apt){
+  const m=(apt.pay_method||'').trim(), s=(apt.pay_status||'Pending').trim(), paid=s==='Paid';
+  if(m==='Stripe') return{type:'online',label:'💳 Online · Stripe',sub:paid?'Payment received · ₹1500':'Awaiting online payment · ₹1500',badge:paid?bdg('Paid Online','b-com'):bdg('Awaiting Payment','b-pen'),paid};
+  if(m==='Cash')   return{type:'cash',label:'💵 Cash · Clinic Counter',sub:paid?'Cash collected · ₹1500':'Not yet collected · ₹1500',badge:paid?bdg('Cash Collected','b-cas'):bdg('Collect ₹1500','b-pen'),paid};
+  return{type:'pending',label:'⏳ No payment method',sub:'Payment method not set',badge:bdg('Pending','b-pen'),paid:false};
+}
+
+/* ══════════════════════════════════════════════════
+   AUTH
+   ══════════════════════════════════════════════════ */
+function doLogin(){
+  const em=$('lem').value.trim(), pw=$('lpw').value;
+  const u=USERS.find(u=>u.email===em&&u.pw===pw);
+  if(!u){$('lerr').classList.add('sh');return;}
+  $('lerr').classList.remove('sh');
+  CU=u;
+  $('login').classList.add('h');
+  $('app').style.display='flex';
+  $('sav').textContent=ini(u.name); $('snm').textContent=u.name;
+  $('srl').textContent=u.role; $('sp').textContent=u.role==='doctor'?'Doctor Portal':'Reception';
+  buildNav();
+  loadAll().then(()=>{ render(); startAutoRefresh(); });
+}
+function doLogout(){ stopAutoRefresh(); CU=null; $('app').style.display='none'; $('login').classList.remove('h'); $('reminder').classList.add('h'); }
+$('lpw').addEventListener('keydown',ev=>{if(ev.key==='Enter')doLogin();});
+
+/* ══════════════════════════════════════════════════
+   NAV
+   ══════════════════════════════════════════════════ */
+const DOC_NAV=[
+  {g:'Main'},{id:'dash',l:'Dashboard'},{id:'today',l:'Today'},{id:'upcoming',l:'Upcoming'},
+  {g:'Views'},{id:'calendar',l:'Calendar'},{id:'analytics',l:'Analytics'},
+  {g:'Records'},{id:'patients',l:'Patients'},
+];
+const REC_NAV=[
+  {g:'Main'},{id:'dash',l:'Dashboard'},{id:'apts',l:'Appointments'},
+  {g:'Views'},{id:'calendar',l:'Calendar'},{id:'analytics',l:'Analytics'},
+  {g:'Records'},{id:'patients',l:'Patients'},{id:'payments',l:'Payments'},
+  {g:'Settings'},{id:'config',l:'Config Editor'},
+];
+const NICO={
+  dash:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></svg>`,
+  today:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
+  upcoming:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>`,
+  patients:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>`,
+  apts:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
+  payments:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>`,
+  calendar:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18M8 14h.01M12 14h.01M16 14h.01M8 18h.01M12 18h.01"/></svg>`,
+  analytics:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>`,
+  config:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.07 4.93a10 10 0 0 1 0 14.14M4.93 4.93a10 10 0 0 0 0 14.14"/></svg>`,
+};
+function buildNav(){
+  const nav=CU.role==='doctor'?DOC_NAV:REC_NAV;
+  $('snav').innerHTML=nav.map(n=>n.g
+    ?`<div class="ng">${n.g}</div>`
+    :`<div class="ni ${n.id===PAGE?'on':''}" onclick="nav('${n.id}')">${NICO[n.id]}${n.l}</div>`
+  ).join('');
+}
+function nav(p){PAGE=p;SF='all';SQ='';buildNav();render();$('main').scrollTop=0;}
+
+/* ══════════════════════════════════════════════════
+   RENDER ROUTER
+   ══════════════════════════════════════════════════ */
+function render(){
+  const el=$('pg');el.className='inner fi';void el.offsetWidth;
+  if(CU.role==='doctor'){
+    if(PAGE==='patients'){renderPatients();return;}
+    if(PAGE==='calendar'){renderCalendar();return;}
+    if(PAGE==='analytics'){renderAnalytics();return;}
+    renderDoctor(PAGE==='upcoming'?'upcoming':'today');
+  }else{
+    if(PAGE==='patients'){renderPatients();return;}
+    if(PAGE==='payments'){renderPayments();return;}
+    if(PAGE==='calendar'){renderCalendar();return;}
+    if(PAGE==='analytics'){renderAnalytics();return;}
+    if(PAGE==='config'){renderConfig();return;}
+    renderReceptionist();
+  }
+}
+function reload(){loadAll().then(()=>{ render(); refreshCountdown=60; updateRefreshStatus(); toast('↻ Refreshed from Sheets'); });}
+
+/* ══════════════════════════════════════════════════
+   STATS
+   ══════════════════════════════════════════════════ */
+function getStats(){
+  const td=todayISO(), ta=APTS.filter(a=>a.date===td);
+  return{today:ta.length,pending:APTS.filter(a=>a.status==='Scheduled').length,completed:APTS.filter(a=>a.status==='Completed').length,revenue:ta.filter(a=>a.pay_status==='Paid').length*1500};
+}
+function statsHTML(cols=4){
+  const s=getStats();
+  return`<div class="sg" style="grid-template-columns:repeat(${cols},1fr)">
+    <div class="sc" style="--c:var(--teal)"><div class="si">${IC.cal}</div><div class="sv">${s.today}</div><div class="sl">Today's patients</div></div>
+    <div class="sc" style="--c:var(--amber)"><div class="si">${IC.clk}</div><div class="sv">${s.pending}</div><div class="sl">Pending</div></div>
+    <div class="sc" style="--c:var(--green)"><div class="si">${IC.chk}</div><div class="sv">${s.completed}</div><div class="sl">Completed</div></div>
+    <div class="sc" style="--c:var(--purple)"><div class="si">${IC.rs}</div><div class="sv">₹${s.revenue.toLocaleString()}</div><div class="sl">Today revenue</div></div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════════════
+   DOCTOR DASHBOARD
+   ══════════════════════════════════════════════════ */
+function renderDoctor(tab){
+  TAB=tab;
+  const td=todayISO();
+  const list=(tab==='today'?APTS.filter(a=>a.date===td):APTS.filter(a=>a.date>td)).sort(byDT);
+  $('pg').innerHTML=`
+    <div class="ph">
+      <div><div class="pt">Good morning, ${e(CU.name.split(' ')[0])} 👋</div><div class="ps">${fmtDay()}</div></div>
+      <div class="ha"><div class="live"><span class="ldot"></span>Live · Sheets</div><button class="btn" onclick="reload()">↻ Refresh</button></div>
+    </div>
+    ${statsHTML()}
+    <div class="tabs">
+      <button class="tab ${tab==='today'?'on':''}" onclick="renderDoctor('today')">Today's Queue</button>
+      <button class="tab ${tab==='upcoming'?'on':''}" onclick="renderDoctor('upcoming')">Upcoming</button>
+      <span class="tc">${list.length} appointment${list.length!==1?'s':''}</span>
+    </div>
+    <div class="cards">${list.length?list.map(docCard).join(''):empt('📅',tab==='today'?'No appointments today':'No upcoming appointments')}</div>`;
+}
+function docCard(a){
+  const pi=payInfo(a), can=a.status==='Scheduled';
+  return`<div class="card">
+    <div><div class="cav">${ini(a.name)}</div><div class="ctm">${ft(a.time)}</div></div>
+    <div>
+      <div class="cname">${e(a.name)}</div>
+      <div class="cmeta">${e(a.wa)} · ${fd(a.date)}${a.age?' · '+a.age+'y':''}</div>
+      <div class="cbadges">${sttBdg(a.status)} ${pi.badge}${a.gender?` <span style="font-size:10px;color:var(--t3)">${e(a.gender)}</span>`:''}</div>
+      <div class="payblock ${pi.type}"><b>${pi.label}</b> — ${pi.sub}${a.stripe_pi?`<br/><span style="opacity:.6;font-size:10px">Stripe: ${e(a.stripe_pi)}</span>`:''}</div>
+      <div class="cacts">
+        <button class="btn btn-sm" onclick="openDetail('${a.id}')">Details</button>
+        ${can?`<button class="btn btn-g btn-sm" onclick="askStatus('${a.id}','Completed')">✓ Done</button>`:''}
+        ${can?`<button class="btn btn-r btn-sm" onclick="askStatus('${a.id}','No Show')">No Show</button>`:''}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ══════════════════════════════════════════════════
+   RECEPTIONIST DASHBOARD
+   ══════════════════════════════════════════════════ */
+function renderReceptionist(){
+  $('pg').innerHTML=`
+    <div class="ph">
+      <div><div class="pt">Reception Desk</div><div class="ps">${fmtDay()}</div></div>
+      <div class="ha"><button class="btn" onclick="reload()">↻ Refresh</button><button class="btn btn-b" onclick="om('m-pat')">+ Patient</button><button class="btn btn-p" onclick="openBookModal()">+ Book</button></div>
+    </div>
+    ${statsHTML()}
+    <div class="fb">
+      <div class="sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input class="si2" placeholder="Search name or WhatsApp…" value="${e(SQ)}" oninput="SQ=this.value;rTbl()"/></div>
+      <div class="pills">${['all','Scheduled','Completed','No Show','Cancelled','Rescheduled'].map(s=>`<button class="pill ${SF===s?'on':''}" onclick="SF='${s}';rTbl()">${s==='all'?'All':s}</button>`).join('')}</div>
+    </div>
+    <div id="rtbl">${buildTbl(fltApts())}</div>`;
+}
+function rTbl(){const el=$('rtbl');if(el)el.innerHTML=buildTbl(fltApts());}
+function fltApts(){return APTS.filter(a=>{const ms=SF==='all'||a.status===SF,mq=!SQ.trim()||a.name.toLowerCase().includes(SQ.toLowerCase())||a.wa.includes(SQ);return ms&&mq;}).sort(byDT);}
+function buildTbl(list){
+  if(!list.length) return empt('🔍','No appointments found');
+  return`<div class="tw"><table>
+    <thead><tr><th>Patient</th><th>Date / Time</th><th>Status</th><th>Payment Method</th><th>Payment Status</th><th>Actions</th></tr></thead>
+    <tbody>${list.map(a=>{
+      const pi=payInfo(a),can=['Scheduled','Rescheduled'].includes(a.status),needCash=a.pay_method==='Cash'&&a.pay_status!=='Paid';
+      return`<tr>
+        <td><div class="pc"><div class="ca">${ini(a.name)}</div><div><div class="cn">${e(a.name)}</div><div class="cp">${e(a.wa)}</div></div></div></td>
+        <td><div style="font-size:12px;font-weight:600;color:var(--t1)">${fd(a.date)}</div><div style="font-size:10px;color:var(--t3)">${ft(a.time)}</div></td>
+        <td>${sttBdg(a.status)}</td>
+        <td><span style="font-size:11px;color:var(--t2)">${a.pay_method==='Stripe'?'💳 Online (Stripe)':a.pay_method==='Cash'?'💵 Cash (Clinic)':'—'}</span>${a.pay_method?`<div style="font-size:10px;color:var(--t3)">₹1500</div>`:''}</td>
+        <td>${pi.badge}</td>
+        <td><div class="ra">
+          <button class="btn btn-sm" onclick="openDetail('${a.id}')">👁</button>
+          ${can?`<button class="btn btn-a btn-sm" onclick="openResc('${a.id}')">↻</button>`:''}
+          ${can?`<button class="btn btn-r btn-sm" onclick="cancelApt('${a.id}')">✕</button>`:''}
+          ${needCash?`<button class="btn btn-g btn-sm" onclick="openCash('${a.id}')">Collect</button>`:''}
+        </div></td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table></div>`;
+}
+
+/* ══════════════════════════════════════════════════
+   PATIENTS PAGE
+   ══════════════════════════════════════════════════ */
+function renderPatients(){
+  $('pg').innerHTML=`
+    <div class="ph">
+      <div><div class="pt">Patients</div><div class="ps">${PATS.length} registered</div></div>
+      <div class="ha">${CU.role==='receptionist'?`<button class="btn btn-p" onclick="om('m-pat')">+ Add Patient</button>`:''}</div>
+    </div>
+    <div class="fb"><div class="sw"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg><input class="si2" placeholder="Search by name or WhatsApp…" oninput="fltPats(this.value)"/></div></div>
+    <div id="patbl">${buildPats(PATS)}</div>`;
+}
+function fltPats(q){const l=q.trim()?PATS.filter(p=>p.name.toLowerCase().includes(q.toLowerCase())||p.wa.includes(q)):PATS;const el=$('patbl');if(el)el.innerHTML=buildPats(l);}
+function buildPats(list){
+  if(!list.length) return empt('👤','No patients found');
+  return`<div class="tw"><table>
+    <thead><tr><th>Name</th><th>WhatsApp</th><th>Age</th><th>Gender</th><th>Patient ID</th><th>History</th></tr></thead>
+    <tbody>${list.map(p=>`<tr>
+      <td><div class="pc"><div class="ca">${ini(p.name)}</div><div class="cn">${e(p.name)}</div></div></td>
+      <td style="font-size:12px">${e(p.wa)||'—'}</td>
+      <td style="font-size:12px">${p.age||'—'}</td>
+      <td style="font-size:12px">${p.gender||'—'}</td>
+      <td style="font-size:10px;color:var(--t3);font-family:monospace">${p.patient_id||'—'}</td>
+      <td><button class="btn btn-pu btn-sm" onclick="openHistory('${e(p.patient_id)}','${e(p.wa)}','${e(p.name)}')">📋 History</button></td>
+    </tr>`).join('')}</tbody>
+  </table></div>`;
+}
+function openHistory(pid, wa, name){
+  const apts=APTS.filter(a=>a.pid===pid||a.wa===wa).sort((a,b)=>b.date.localeCompare(a.date));
+  $('m-history-body').innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+      <div style="width:44px;height:44px;border-radius:50%;background:rgba(45,212,191,.12);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700">${ini(name)}</div>
+      <div><div style="font-size:15px;font-weight:700;color:var(--t1)">${e(name)}</div><div style="font-size:11px;color:var(--t3)">${e(wa)} · ${apts.length} appointment${apts.length!==1?'s':''}</div></div>
+    </div>
+    ${apts.length?`<div class="tw"><table>
+      <thead><tr><th>Date</th><th>Time</th><th>Status</th><th>Payment</th><th>Stripe ID</th></tr></thead>
+      <tbody>${apts.map(a=>{
+        const pi=payInfo(a);
+        return`<tr>
+          <td style="font-size:12px;color:var(--t1);font-weight:600">${fd(a.date)}</td>
+          <td style="font-size:11px;color:var(--t3)">${ft(a.time)}</td>
+          <td>${sttBdg(a.status)}</td>
+          <td>${pi.badge}</td>
+          <td style="font-size:10px;color:var(--t3);font-family:monospace">${a.stripe_pi||'—'}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>`:empt('📅','No appointments found for this patient')}`;
+  om('m-history');
+}
+
+/* ══════════════════════════════════════════════════
+   PAYMENTS PAGE
+   ══════════════════════════════════════════════════ */
+function renderPayments(){
+  const sA=APTS.filter(a=>a.pay_method==='Stripe'), cA=APTS.filter(a=>a.pay_method==='Cash');
+  const pS=sA.filter(a=>a.pay_status==='Paid').length, pC=cA.filter(a=>a.pay_status==='Paid').length;
+  $('pg').innerHTML=`
+    <div class="ph"><div><div class="pt">Payments</div><div class="ps">₹1500 per appointment</div></div><div class="ha"><button class="btn" onclick="reload()">↻ Refresh</button></div></div>
+    <div class="sg">
+      <div class="sc" style="--c:var(--blue)"><div class="si">${IC.cal}</div><div class="sv">${sA.length}</div><div class="sl">Online (Stripe)</div></div>
+      <div class="sc" style="--c:var(--green)"><div class="si">${IC.rs}</div><div class="sv">${cA.length}</div><div class="sl">Cash (Clinic)</div></div>
+      <div class="sc" style="--c:var(--green)"><div class="si">${IC.chk}</div><div class="sv">${pS+pC}</div><div class="sl">Total collected</div></div>
+      <div class="sc" style="--c:var(--purple)"><div class="si">${IC.rs}</div><div class="sv">₹${((pS+pC)*1500).toLocaleString()}</div><div class="sl">Revenue</div></div>
+    </div>
+    <div class="tw"><table>
+      <thead><tr><th>Patient</th><th>WhatsApp</th><th>Date</th><th>Method</th><th>Amount</th><th>Status</th><th>Stripe ID</th><th>Action</th></tr></thead>
+      <tbody>${APTS.map(a=>{
+        const pi=payInfo(a);
+        return`<tr>
+          <td><div class="pc"><div class="ca">${ini(a.name)}</div><div><div class="cn">${e(a.name)}</div>${a.age?`<div class="cp">${a.age}y${a.gender?' · '+a.gender:''}</div>`:''}</div></div></td>
+          <td style="font-size:11px;color:var(--t2)">${e(a.wa)||'—'}</td>
+          <td><div style="font-size:12px;color:var(--t1)">${fd(a.date)}</div><div style="font-size:10px;color:var(--t3)">${ft(a.time)}</div></td>
+          <td><span style="font-size:11px">${a.pay_method==='Stripe'?'💳 Online':a.pay_method==='Cash'?'💵 Cash':'—'}</span></td>
+          <td style="font-weight:600;color:var(--t1)">₹1500</td>
+          <td>${pi.badge}</td>
+          <td style="font-size:10px;color:var(--t3);font-family:monospace;max-width:130px;overflow:hidden;text-overflow:ellipsis">${a.stripe_pi||'—'}</td>
+          <td>${a.pay_method==='Cash'&&a.pay_status!=='Paid'?`<button class="btn btn-g btn-sm" onclick="openCash('${a.id}')">Collect</button>`:'—'}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>`;
+}
+
+/* ══════════════════════════════════════════════════
+   CALENDAR VIEW
+   ══════════════════════════════════════════════════ */
+function renderCalendar(){
+  const names=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  const firstDay=new Date(CAL_YEAR,CAL_MON,1).getDay();
+  const daysInMonth=new Date(CAL_YEAR,CAL_MON+1,0).getDate();
+  const td=todayISO();
+  const aptMap={};
+  APTS.forEach(a=>{
+    if(a.date&&a.date.startsWith(`${CAL_YEAR}-${String(CAL_MON+1).padStart(2,'0')}`)){
+      if(!aptMap[a.date]) aptMap[a.date]=[];
+      aptMap[a.date].push(a);
+    }
+  });
+  let cells='';
+  for(let i=0;i<firstDay;i++) cells+=`<div class="cal-day empty-day"></div>`;
+  for(let d=1;d<=daysInMonth;d++){
+    const iso=`${CAL_YEAR}-${String(CAL_MON+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+    const dayApts=aptMap[iso]||[];
+    const isToday=iso===td;
+    const hasApts=dayApts.length>0;
+    const dotColors={Scheduled:'var(--blue)',Completed:'var(--green)','No Show':'var(--red)',Cancelled:'#71717a',Rescheduled:'var(--amber)'};
+    const dots=dayApts.slice(0,6).map(a=>`<div class="cal-dot" style="background:${dotColors[a.status]||'var(--t3)'}"></div>`).join('');
+    cells+=`<div class="cal-day ${isToday?'today':''} ${hasApts?'has-apts':''}" onclick="${hasApts?`openDayApts('${iso}')`:''}" style="${hasApts?'cursor:pointer':'cursor:default'}">
+      <div class="cal-dn">${d}</div>
+      ${hasApts?`<div class="cal-dot-row">${dots}</div><div class="cal-count">${dayApts.length} apt${dayApts.length!==1?'s':''}</div>`:''}
+    </div>`;
+  }
+  $('pg').innerHTML=`
+    <div class="ph">
+      <div><div class="pt">Calendar</div><div class="ps">Click on a day to see appointments</div></div>
+      <div class="ha"><button class="btn" onclick="reload()">↻ Refresh</button></div>
+    </div>
+    <div style="background:var(--sur);border:1px solid var(--bor);border-radius:14px;padding:20px">
+      <div class="cal-nav">
+        <button class="cal-nav-btn" onclick="calNav(-1)">‹</button>
+        <div class="cal-month">${names[CAL_MON]} ${CAL_YEAR}</div>
+        <button class="cal-nav-btn" onclick="calNav(1)">›</button>
+        <button class="btn btn-sm" style="margin-left:auto" onclick="CAL_YEAR=new Date().getFullYear();CAL_MON=new Date().getMonth();renderCalendar()">Today</button>
+      </div>
+      <div class="cal-grid">${days.map(d=>`<div class="cal-hdr">${d}</div>`).join('')}${cells}</div>
+      <div style="display:flex;gap:14px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--bor)">
+        ${Object.entries({Scheduled:'var(--blue)',Completed:'var(--green)','No Show':'var(--red)',Cancelled:'#71717a',Rescheduled:'var(--amber)'}).map(([s,c])=>
+          `<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--t3)"><div style="width:8px;height:8px;border-radius:50%;background:${c}"></div>${s}</div>`
+        ).join('')}
+      </div>
+    </div>`;
+}
+function calNav(dir){
+  CAL_MON+=dir;
+  if(CAL_MON>11){CAL_MON=0;CAL_YEAR++;}
+  if(CAL_MON<0){CAL_MON=11;CAL_YEAR--;}
+  renderCalendar();
+}
+function openDayApts(iso){
+  const list=APTS.filter(a=>a.date===iso).sort(byDT);
+  $('m-day-title').textContent=`Appointments · ${fd(iso)}`;
+  $('m-day-body').innerHTML=list.length
+    ?`<div class="cards">${list.map(a=>{
+        const pi=payInfo(a);
+        return`<div class="card">
+          <div><div class="cav">${ini(a.name)}</div><div class="ctm">${ft(a.time)}</div></div>
+          <div>
+            <div class="cname">${e(a.name)}</div>
+            <div class="cmeta">${e(a.wa)}${a.age?' · '+a.age+'y':''}</div>
+            <div class="cbadges">${sttBdg(a.status)} ${pi.badge}</div>
+            <div class="cacts"><button class="btn btn-sm" onclick="cm('m-day');openDetail('${a.id}')">Details</button></div>
+          </div>
+        </div>`;
+      }).join('')}</div>`
+    :empt('📅','No appointments on this day');
+  om('m-day');
+}
+
+/* ══════════════════════════════════════════════════
+   ANALYTICS
+   ══════════════════════════════════════════════════ */
+function renderAnalytics(){
+  const days7=[];
+  for(let i=6;i>=0;i--){
+    const d=new Date(); d.setDate(d.getDate()-i);
+    const iso=d.toISOString().split('T')[0];
+    const label=d.toLocaleDateString('en-IN',{weekday:'short'});
+    const count=APTS.filter(a=>a.date===iso).length;
+    const rev=APTS.filter(a=>a.date===iso&&a.pay_status==='Paid').length*1500;
+    days7.push({iso,label,count,rev});
+  }
+  const maxCount=Math.max(...days7.map(d=>d.count),1);
+  const maxRev=Math.max(...days7.map(d=>d.rev),1);
+  const stripe=APTS.filter(a=>a.pay_method==='Stripe').length;
+  const cash=APTS.filter(a=>a.pay_method==='Cash').length;
+  const noMethod=APTS.length-stripe-cash;
+  const statuses=['Scheduled','Completed','No Show','Cancelled','Rescheduled'];
+  const sColors={'Scheduled':'var(--blue)','Completed':'var(--green)','No Show':'var(--red)','Cancelled':'#71717a','Rescheduled':'var(--amber)'};
+  const statusCounts=statuses.map(s=>({s,n:APTS.filter(a=>a.status===s).length}));
+  function donut(parts,colors,size=120){
+    let total2=parts.reduce((a,b)=>a+b,0)||1;
+    let angle=0; let segs='';
+    const cx=size/2,cy=size/2,r=size*0.38,ri=size*0.24;
+    parts.forEach((p,i)=>{
+      const pct=p/total2, a1=angle*Math.PI*2-Math.PI/2, a2=(angle+pct)*Math.PI*2-Math.PI/2;
+      const x1=cx+r*Math.cos(a1),y1=cy+r*Math.sin(a1),x2=cx+r*Math.cos(a2),y2=cy+r*Math.sin(a2);
+      const x3=cx+ri*Math.cos(a2),y3=cy+ri*Math.sin(a2),x4=cx+ri*Math.cos(a1),y4=cy+ri*Math.sin(a1);
+      const lg=pct>0.5?1:0;
+      segs+=`<path d="M${x1.toFixed(1)} ${y1.toFixed(1)} A${r} ${r} 0 ${lg} 1 ${x2.toFixed(1)} ${y2.toFixed(1)} L${x3.toFixed(1)} ${y3.toFixed(1)} A${ri} ${ri} 0 ${lg} 0 ${x4.toFixed(1)} ${y4.toFixed(1)} Z" fill="${colors[i]}" opacity="0.85"/>`;
+      angle+=pct;
+    });
+    return`<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${segs}</svg>`;
+  }
+  $('pg').innerHTML=`
+    <div class="ph"><div><div class="pt">Analytics</div><div class="ps">Last 7 days overview</div></div><div class="ha"><button class="btn" onclick="reload()">↻ Refresh</button></div></div>
+    ${statsHTML()}
+    <div class="ana-grid">
+      <div class="chart-card">
+        <div class="chart-title">Appointments — Last 7 Days</div>
+        <div class="chart-sub">Daily appointment count</div>
+        <div class="bars">${days7.map(d=>`<div class="bar-wrap"><div class="bar" style="height:${Math.max((d.count/maxCount)*110,2)}px;background:var(--teal)" title="${d.count} appointments"><span class="bar-val">${d.count}</span></div><span class="bar-lbl">${d.label}</span></div>`).join('')}</div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Revenue — Last 7 Days</div>
+        <div class="chart-sub">Daily revenue from paid appointments</div>
+        <div class="bars">${days7.map(d=>`<div class="bar-wrap"><div class="bar" style="height:${Math.max((d.rev/maxRev)*110,2)}px;background:var(--purple)" title="₹${d.rev}"><span class="bar-val">₹${d.rev}</span></div><span class="bar-lbl">${d.label}</span></div>`).join('')}</div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Payment Method Breakdown</div>
+        <div class="chart-sub">All appointments</div>
+        <div class="donut-wrap">${donut([stripe||0.01,cash||0.01,noMethod||0.01],['var(--blue)','var(--green)','var(--t3)'])}<div class="donut-legend"><div class="legend-item"><div class="legend-dot" style="background:var(--blue)"></div>Online (Stripe)<span class="legend-val">${stripe}</span></div><div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Cash (Clinic)<span class="legend-val">${cash}</span></div><div class="legend-item"><div class="legend-dot" style="background:var(--t3)"></div>Not set<span class="legend-val">${noMethod}</span></div></div></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-title">Appointment Status</div>
+        <div class="chart-sub">All time breakdown</div>
+        <div class="donut-wrap">${donut(statusCounts.map(s=>s.n||0.01),statuses.map(s=>sColors[s]))}<div class="donut-legend">${statusCounts.map(({s,n})=>`<div class="legend-item"><div class="legend-dot" style="background:${sColors[s]}"></div>${s}<span class="legend-val">${n}</span></div>`).join('')}</div></div>
+      </div>
+    </div>`;
+}
+
+/* ══════════════════════════════════════════════════
+   CONFIG EDITOR
+   ══════════════════════════════════════════════════ */
+function renderConfig(){
+  const notAvail=(CFG.not_available||'').split(',').map(d=>d.trim()).filter(Boolean);
+  $('pg').innerHTML=`
+    <div class="ph"><div><div class="pt">Config Editor</div><div class="ps">Clinic working hours and availability settings</div></div><div class="ha"><button class="btn" onclick="reload()">↻ Reload from Sheets</button></div></div>
+    <div class="config-section">
+      <div class="config-section-title">Appointment Settings</div>
+      <div class="config-section-sub">These values are read by your n8n WhatsApp bot to generate time slots.</div>
+      <div class="fr">
+        <div><label>Slot Duration (minutes)</label><input type="number" id="cfg-slot" value="${e(CFG.slot_duration||'30')}" min="10" max="120" step="5"/></div>
+        <div><label>Working Hours</label><input type="text" id="cfg-hours" value="${e(CFG.working_hours||'09:00-17:00')}" placeholder="09:00-17:00"/></div>
+      </div>
+      <p style="font-size:11px;color:var(--t3)">Working hours format: <code style="background:var(--ele);padding:1px 6px;border-radius:4px">09:00-17:00</code></p>
+    </div>
+    <div class="config-section">
+      <div class="config-section-title">Blocked Dates</div>
+      <div class="config-section-sub">Dates when the clinic is closed. The bot will not allow bookings on these dates.</div>
+      <div class="fr" style="align-items:flex-end">
+        <div><label>Add Blocked Date</label><input type="date" id="cfg-new-date"/></div>
+        <div><button class="btn btn-r" style="margin-top:20px" onclick="addBlockedDate()">+ Add Date</button></div>
+      </div>
+      <div class="date-chips" id="date-chips">
+        ${notAvail.length?notAvail.map(d=>`<div class="date-chip" data-date="${d}">${fd(d)}<button onclick="removeBlockedDate('${d}')">×</button></div>`).join(''):
+        `<span style="font-size:11px;color:var(--t3)">No blocked dates</span>`}
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;margin-top:4px">
+      <button class="btn btn-p" onclick="saveConfig()" style="padding:10px 20px">💾 Save to Google Sheets</button>
+    </div>`;
+}
+let _blockedDates=(CFG.not_available||'').split(',').map(d=>d.trim()).filter(Boolean);
+function renderBlockedChips(){
+  const el=$('date-chips');if(!el)return;
+  el.innerHTML=_blockedDates.length
+    ?_blockedDates.map(d=>`<div class="date-chip" data-date="${d}">${fd(d)}<button onclick="removeBlockedDate('${d}')">×</button></div>`).join('')
+    :`<span style="font-size:11px;color:var(--t3)">No blocked dates</span>`;
+}
+function addBlockedDate(){
+  const d=$('cfg-new-date').value; if(!d){alert('Pick a date');return;}
+  if(!_blockedDates.includes(d)){_blockedDates.push(d);_blockedDates.sort();}
+  $('cfg-new-date').value=''; renderBlockedChips();
+}
+function removeBlockedDate(d){ _blockedDates=_blockedDates.filter(x=>x!==d); renderBlockedChips(); }
+async function saveConfig(){
+  const slot=$('cfg-slot').value, hours=$('cfg-hours').value;
+  if(!slot||!hours){alert('Fill slot duration and working hours');return;}
+  const newCFG={slot_duration:slot,working_hours:hours,not_available:_blockedDates.join(',')};
+  try{
+    setLoad(true,'Saving config…');
+    await apiPatch(SH.config,'slot_duration',CFG.slot_duration||slot,newCFG);
+    CFG=newCFG; toast('✓ Config saved to Google Sheets');
+  }catch(err){
+    try{ await apiPost(SH.config,newCFG); CFG=newCFG; toast('✓ Config created in Google Sheets'); }
+    catch(e2){ toast('⚠ Save failed: '+e2.message); }
+  }finally{ setLoad(false); }
+}
+
+/* ══════════════════════════════════════════════════
+   🔔 REMINDER WIDGET
+   ══════════════════════════════════════════════════ */
+function updateReminder(){
+  const td=todayISO();
+  const upcoming=APTS.filter(a=>a.date===td&&a.status==='Scheduled').sort(byDT).slice(0,4);
+  $('reminder').classList.remove('h');
+  const count=upcoming.length;
+  $('rem-title-txt').textContent=`Today's Queue · ${count} pending`;
+  $('rem-body').innerHTML=count
+    ?upcoming.map(a=>`<div class="rem-item"><div class="rem-time">${ft(a.time)}</div><div><div class="rem-name">${e(a.name)}</div><div class="rem-pay">${a.pay_method==='Stripe'?'💳 Online':a.pay_method==='Cash'?'💵 Cash':'—'}</div></div></div>`).join('')
+    :`<div class="rem-empty">No pending appointments today</div>`;
+}
+let remCollapsed=false;
+function toggleReminder(){ remCollapsed=!remCollapsed; $('reminder').classList.toggle('collapsed',remCollapsed); $('rem-tog').textContent=remCollapsed?'▸':'▾'; }
+
+/* ══════════════════════════════════════════════════
+   🖨️ PRINT SLIP
+   ══════════════════════════════════════════════════ */
+function printSlip(){
+  if(!PRINT_APT) return;
+  const a=PRINT_APT, pi=payInfo(a);
+  const w=window.open('','_blank','width=500,height=600');
+  w.document.write(`<!DOCTYPE html><html><head><title>Appointment Slip</title>
+  <style>body{font-family:Arial,sans-serif;font-size:13px;padding:28px;color:#111;max-width:420px;margin:0 auto}.logo{font-size:18px;font-weight:800;color:#0d9488;margin-bottom:4px}.sub{font-size:11px;color:#666;margin-bottom:18px}hr{border:none;border-top:1px dashed #ddd;margin:14px 0}.row{display:flex;justify-content:space-between;margin-bottom:8px;font-size:12px}.lbl{color:#666}.val{font-weight:600}.pay-box{background:${pi.type==='online'?'#eff6ff':pi.type==='cash'?'#f0fdf4':'#fffbeb'};border:1px solid ${pi.type==='online'?'#bfdbfe':pi.type==='cash'?'#bbf7d0':'#fde68a'};border-radius:8px;padding:10px 14px;margin-top:12px}.pay-title{font-weight:700;font-size:13px;color:${pi.type==='online'?'#1d4ed8':pi.type==='cash'?'#15803d':'#92400e'}}.pay-sub{font-size:11px;color:#666;margin-top:2px}.footer{margin-top:20px;font-size:10px;color:#aaa;text-align:center}@media print{body{padding:10px}}</style></head><body>
+  <div class="logo">🏥 MedFlow Clinic</div><div class="sub">Appointment Confirmation Slip</div><hr/>
+  <div class="row"><span class="lbl">Patient Name</span><span class="val">${e(a.name)}</span></div>
+  <div class="row"><span class="lbl">WhatsApp</span><span class="val">${e(a.wa)}</span></div>
+  ${a.age?`<div class="row"><span class="lbl">Age / Gender</span><span class="val">${a.age}y${a.gender?' · '+a.gender:''}</span></div>`:''}
+  <hr/>
+  <div class="row"><span class="lbl">Appointment ID</span><span class="val" style="font-family:monospace;font-size:11px">${e(a.id)}</span></div>
+  <div class="row"><span class="lbl">Date</span><span class="val">${fd(a.date)}</span></div>
+  <div class="row"><span class="lbl">Time</span><span class="val">${ft(a.time)}</span></div>
+  <div class="row"><span class="lbl">Status</span><span class="val">${a.status}</span></div>
+  <div class="pay-box"><div class="pay-title">${pi.label}</div><div class="pay-sub">${pi.sub}</div>${a.stripe_pi?`<div style="font-size:10px;color:#888;margin-top:4px;font-family:monospace">Stripe ID: ${e(a.stripe_pi)}</div>`:''}</div>
+  <div class="footer">Generated by MedFlow · ${new Date().toLocaleString('en-IN')}<br/>Please show this slip at the reception.</div>
+  <script>window.onload=()=>window.print();<\/script></body></html>`);
+  w.document.close();
+}
+
+/* ══════════════════════════════════════════════════
+   ✨ SMART BOOK APPOINTMENT MODAL
+   ══════════════════════════════════════════════════ */
+
+function openBookModal(){
+  // Reset state
+  BOOK_PAT = null;
+  // Reset UI
+  $('ba-search').value = '';
+  $('ba-new-name').value = '';
+  $('ba-new-wa').value = '';
+  $('ba-new-age').value = '';
+  $('ba-new-gen').value = '';
+  $('ba-date').value = '';
+  $('ba-time').value = '';
+  $('ba-pay').value = 'Cash';
+  $('ba-dropdown').innerHTML = '';
+  $('ba-dropdown').classList.remove('open');
+  $('ba-selected-wrap').style.display = 'none';
+  $('ba-selected-wrap').innerHTML = '';
+  $('ba-new-panel').style.display = 'block';
+  $('ba-or-divider').style.display = 'flex';
+  // Show step 1
+  $('book-step1').style.display = 'block';
+  $('book-step2').style.display = 'none';
+  setBookStep(1);
+  om('m-book');
+}
+
+function closeBookModal(){
+  cm('m-book');
+  BOOK_PAT = null;
+}
+
+function setBookStep(n){
+  const s1=$('bstep-1'), s2=$('bstep-2');
+  s1.className='book-step'+(n===1?' active':' done');
+  s2.className='book-step'+(n===2?' active':'');
+}
+
+/* Live patient search as receptionist types */
+function bookSearch(q){
+  const dd=$('ba-dropdown');
+  if(!q.trim()){dd.classList.remove('open');dd.innerHTML='';return;}
+  const matches=PATS.filter(p=>
+    p.name.toLowerCase().includes(q.toLowerCase())||
+    p.wa.includes(q)
+  ).slice(0,6);
+
+  let html='';
+  if(matches.length){
+    matches.forEach(p=>{
+      const aptCount=APTS.filter(a=>a.pid===p.patient_id).length;
+      html+=`<div class="pat-result" onclick="selectPatient('${e(p.patient_id)}')">
+        <div class="pat-result-av">${ini(p.name)}</div>
+        <div>
+          <div class="pat-result-name">${e(p.name)}</div>
+          <div class="pat-result-meta">${e(p.wa)}${p.age?' · '+p.age+'y':''}${p.gender?' · '+p.gender:''} · ${aptCount} visit${aptCount!==1?'s':''}</div>
+        </div>
+      </div>`;
+    });
+  }
+  // Always show "create new" option at bottom
+  html+=`<div class="pat-result-create" onclick="createNewFromSearch('${e(q).replace(/'/g,"\\'")}')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
+    Create new patient "${e(q)}"
+  </div>`;
+
+  if(!matches.length){
+    html=`<div class="pat-no-results">No existing patients match "${e(q)}"</div>`+html;
+  }
+  dd.innerHTML=html;
+  dd.classList.add('open');
+}
+
+/* Select an existing patient from the dropdown */
+function selectPatient(pid){
+  const p=PATS.find(x=>x.patient_id===pid);
+  if(!p) return;
+  BOOK_PAT={pid:p.patient_id,name:p.name,wa:p.wa,age:p.age,gender:p.gender,isNew:false};
+  $('ba-dropdown').classList.remove('open');
+  $('ba-search').value='';
+  // Show selected chip
+  const aptCount=APTS.filter(a=>a.pid===pid).length;
+  $('ba-selected-wrap').innerHTML=`
+    <div class="pat-selected">
+      <div class="pat-selected-av">${ini(p.name)}</div>
+      <div class="pat-selected-info">
+        <div class="pat-selected-name">${e(p.name)}</div>
+        <div class="pat-selected-meta">${e(p.wa)}${p.age?' · '+p.age+'y':''}${p.gender?' · '+p.gender:''} · ${aptCount} previous visit${aptCount!==1?'s':''}</div>
+      </div>
+      <button class="pat-selected-change" onclick="clearPatientSelection()">Change</button>
+    </div>`;
+  $('ba-selected-wrap').style.display='block';
+  // Hide search & new form
+  $('ba-new-panel').style.display='none';
+  $('ba-or-divider').style.display='none';
+}
+
+/* Pre-fill name into new patient form from search query */
+function createNewFromSearch(q){
+  $('ba-dropdown').classList.remove('open');
+  $('ba-search').value='';
+  // If it looks like a phone number, put in WA field; otherwise name
+  if(/^\+?[\d\s\-()]{7,}$/.test(q.trim())){
+    $('ba-new-wa').value=q.trim();
+    $('ba-new-name').focus();
+  } else {
+    $('ba-new-name').value=q.trim();
+    $('ba-new-wa').focus();
+  }
+  $('ba-new-panel').style.display='block';
+  $('ba-or-divider').style.display='flex';
+  $('ba-selected-wrap').style.display='none';
+  $('ba-selected-wrap').innerHTML='';
+  BOOK_PAT=null;
+}
+
+/* Clear selected patient, show search again */
+function clearPatientSelection(){
+  BOOK_PAT=null;
+  $('ba-selected-wrap').style.display='none';
+  $('ba-selected-wrap').innerHTML='';
+  $('ba-new-panel').style.display='block';
+  $('ba-or-divider').style.display='flex';
+  $('ba-search').value='';
+  $('ba-search').focus();
+}
+
+/* Close dropdown on outside click */
+document.addEventListener('click', ev=>{
+  const dd=$('ba-dropdown');
+  if(dd && !dd.contains(ev.target) && ev.target.id!=='ba-search'){
+    dd.classList.remove('open');
+  }
+});
+
+/* Validate step 1 and move to step 2 */
+function bookStep1Next(){
+  // If an existing patient is selected — great
+  if(BOOK_PAT && !BOOK_PAT.isNew){
+    showStep2();
+    return;
+  }
+  // If new patient form has data
+  const name=$('ba-new-name').value.trim();
+  const wa=$('ba-new-wa').value.trim();
+  if(!name||!wa){
+    // highlight missing
+    if(!name) $('ba-new-name').style.borderColor='var(--red)';
+    if(!wa) $('ba-new-wa').style.borderColor='var(--red)';
+    toast('⚠ Enter patient name and WhatsApp');
+    return;
+  }
+  $('ba-new-name').style.borderColor='';
+  $('ba-new-wa').style.borderColor='';
+  BOOK_PAT={
+    pid:'', name, wa,
+    age:$('ba-new-age').value,
+    gender:$('ba-new-gen').value,
+    isNew:true
+  };
+  showStep2();
+}
+
+function showStep2(){
+  $('book-step1').style.display='none';
+  $('book-step2').style.display='block';
+  setBookStep(2);
+  // Render patient chip in step 2
+  $('book-pat-chip').innerHTML=`
+    <div class="pat-selected">
+      <div class="pat-selected-av">${ini(BOOK_PAT.name)}</div>
+      <div class="pat-selected-info">
+        <div class="pat-selected-name">${e(BOOK_PAT.name)} ${BOOK_PAT.isNew?'<span class="pat-new-badge">✦ New Patient</span>':''}</div>
+        <div class="pat-selected-meta">${e(BOOK_PAT.wa)}${BOOK_PAT.age?' · '+BOOK_PAT.age+'y':''}${BOOK_PAT.gender?' · '+BOOK_PAT.gender:''}</div>
+      </div>
+    </div>`;
+  $('ba-date').focus();
+}
+
+function bookStep2Back(){
+  $('book-step1').style.display='block';
+  $('book-step2').style.display='none';
+  setBookStep(1);
+}
+
+/* Final submit — create patient if new, then create appointment */
+async function submitBook(){
+  const date=$('ba-date').value, time=$('ba-time').value, pm=$('ba-pay').value;
+  if(!date||!time){ toast('⚠ Pick a date and time'); return; }
+  if(!BOOK_PAT){ toast('⚠ No patient selected'); return; }
+
+  setLoad(true,'Booking appointment…');
+  try{
+    let pid=BOOK_PAT.pid;
+    let patName=BOOK_PAT.name, patWa=BOOK_PAT.wa;
+
+    // 1) If new patient — create in Sheets first
+    if(BOOK_PAT.isNew){
+      pid='PAT-'+Date.now();
+      const patRow={patient_id:pid,name:patName,whatsapp_number:patWa,age:BOOK_PAT.age,gender:BOOK_PAT.gender};
+      await apiPost(SH.patients,patRow);
+      PATS.push({patient_id:pid,name:patName,wa:patWa,age:BOOK_PAT.age,gender:BOOK_PAT.gender});
+      toast('✓ New patient created · '+pid);
+    }
+
+    // 2) Create appointment
+    const aid='APT-'+Date.now();
+    const aptRow={appointment_id:aid,patient_id:pid,whatsapp_number:patWa,date,time,payment_method:pm,payment_status:'Pending',status:'Scheduled',stripe_payment_intent:''};
+    await apiPost(SH.appts,aptRow);
+    APTS.push({id:aid,pid,name:patName,wa:patWa,age:BOOK_PAT.age,gender:BOOK_PAT.gender,date,time,pay_method:pm,pay_status:'Pending',status:'Scheduled',stripe_pi:''});
+
+    cm('m-book');
+    BOOK_PAT=null;
+    toast(`✓ Appointment booked · ${aid}`);
+    updateReminder();
+    render();
+  }catch(err){
+    toast('⚠ '+err.message);
+  }finally{
+    setLoad(false);
+  }
+}
+
+/* ══════════════════════════════════════════════════
+   OTHER ACTIONS
+   ══════════════════════════════════════════════════ */
+function askStatus(id,status){
+  SEL=id;SEL_S=status;
+  const a=APTS.find(x=>x.id===id);
+  $('mst-title').textContent=`Mark as ${status}`;
+  $('mst-info').innerHTML=`<div class="ibn">${e(a.name)}</div><div class="ibm">${fd(a.date)} · ${ft(a.time)} · ${e(a.wa)}</div>`;
+  $('mst-msg').textContent=status==='Completed'?'Mark this appointment as completed.':'Mark the patient as a no-show.';
+  const btn=$('mst-btn');btn.className='btn '+(status==='Completed'?'btn-g':'btn-r');btn.textContent='Confirm '+status;
+  om('m-status');
+}
+async function confirmStatus(){
+  const a=APTS.find(x=>x.id===SEL);if(!a)return;
+  a.status=SEL_S;cm('m-status');toast('Marked as '+SEL_S);
+  try{await apiPatch(SH.appts,'appointment_id',SEL,{status:SEL_S});}catch(err){toast('⚠ '+err.message);}
+  updateReminder();render();
+}
+function cancelApt(id){
+  if(!confirm('Cancel this appointment?'))return;
+  const a=APTS.find(x=>x.id===id);if(!a)return;
+  a.status='Cancelled';toast('Appointment cancelled');
+  apiPatch(SH.appts,'appointment_id',id,{status:'Cancelled'}).catch(err=>toast('⚠ '+err.message));
+  updateReminder();rTbl();
+}
+function openResc(id){
+  SEL=id;const a=APTS.find(x=>x.id===id);
+  $('mres-info').innerHTML=`<div class="ibn">${e(a.name)}</div><div class="ibm">Current: ${fd(a.date)} at ${ft(a.time)}</div>`;
+  $('r-date').value=a.date;$('r-time').value=a.time;om('m-resc');
+}
+async function submitResc(){
+  const nd=$('r-date').value,nt=$('r-time').value;
+  if(!nd||!nt){alert('Fill new date and time');return;}
+  const a=APTS.find(x=>x.id===SEL);
+  a.date=nd;a.time=nt;a.status='Rescheduled';cm('m-resc');toast('Appointment rescheduled');
+  try{await apiPatch(SH.appts,'appointment_id',SEL,{date:nd,time:nt,status:'Rescheduled'});}catch(err){toast('⚠ '+err.message);}
+  updateReminder();rTbl();
+}
+function openCash(id){
+  SEL=id;const a=APTS.find(x=>x.id===id);
+  $('mcash-info').innerHTML=`<div class="ibn">${e(a.name)}</div><div class="ibm">${fd(a.date)} · ${ft(a.time)} · ${e(a.wa)}</div>`;
+  om('m-cash');
+}
+async function confirmCash(){
+  const a=APTS.find(x=>x.id===SEL);if(!a)return;
+  a.pay_status='Paid';cm('m-cash');toast('₹1500 cash collected ✓');
+  try{await apiPatch(SH.appts,'appointment_id',SEL,{payment_status:'Paid'});}catch(err){toast('⚠ '+err.message);}
+  render();
+}
+async function submitPatient(){
+  const name=$('np-name').value.trim(),wa=$('np-wa').value.trim();
+  if(!name||!wa){alert('Name and WhatsApp required');return;}
+  const pid='PAT-'+Date.now();
+  const row={patient_id:pid,name,whatsapp_number:wa,age:$('np-age').value,gender:$('np-gen').value};
+  PATS.push({patient_id:pid,name,wa,age:row.age,gender:row.gender});
+  cm('m-pat');toast('Patient added · '+pid);
+  $('np-name').value='';$('np-wa').value='';$('np-age').value='';$('np-gen').value='';
+  try{await apiPost(SH.patients,row);}catch(err){toast('⚠ '+err.message);}
+  if(PAGE==='patients')renderPatients();
+}
+function openDetail(id){
+  const a=APTS.find(x=>x.id===id);if(!a)return;
+  PRINT_APT=a;
+  const pi=payInfo(a);
+  $('m-detail-body').innerHTML=`
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:18px">
+      <div style="width:44px;height:44px;border-radius:50%;background:rgba(45,212,191,.12);color:var(--teal);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700">${ini(a.name)}</div>
+      <div><div style="font-size:15px;font-weight:700;color:var(--t1)">${e(a.name)}</div><div style="font-size:11px;color:var(--t3)">${e(a.wa)}</div></div>
+    </div>
+    <div class="dr"><span class="dl">Appointment</span><span class="dv" style="font-family:monospace;font-size:10px">${e(a.id)}</span></div>
+    <div class="dr"><span class="dl">Date & Time</span><span class="dv">${fd(a.date)} at ${ft(a.time)}</span></div>
+    <div class="dr"><span class="dl">Status</span><span class="dv">${sttBdg(a.status)}</span></div>
+    ${a.age?`<div class="dr"><span class="dl">Patient Info</span><span class="dv">${a.age}y${a.gender?' · '+e(a.gender):''}</span></div>`:''}
+    <hr style="border-color:var(--bor);margin:14px 0"/>
+    <div class="pay-panel ${pi.type}" style="margin-bottom:0">
+      <div class="pay-panel-title">${pi.label}</div>
+      <div class="pay-panel-sub">${pi.sub}</div>
+      ${a.stripe_pi?`<div style="margin-top:6px;font-size:10px;opacity:.7;font-family:monospace">Stripe ID: ${e(a.stripe_pi)}</div>`:''}
+    </div>
+    <div style="margin-top:14px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="btn btn-sm" onclick="printSlip()">🖨 Print Slip</button>
+      ${a.wa?`<a href="https://wa.me/${a.wa.replace(/[^0-9]/g,'')}" target="_blank" class="btn btn-g btn-sm">💬 WhatsApp</a>`:''}
+    </div>`;
+  om('m-detail');
+}
+
+/* ══════════════════════════════════════════════════
+   UTILS
+   ══════════════════════════════════════════════════ */
+function $(id){return document.getElementById(id);}
+function om(id){$(id).classList.remove('h');}function cm(id){$(id).classList.add('h');}
+function setLoad(b,msg=''){$('load').className=b?'sh':'';if(msg)$('load-msg').textContent=msg;}
+function ini(n){return(n||'').split(' ').slice(0,2).map(w=>w[0]).join('').toUpperCase()||'?';}
+function e(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function enc(s){return encodeURIComponent(s);}
+function todayISO(){return new Date().toISOString().split('T')[0];}
+function byDT(a,b){const d=(a.date||'').localeCompare(b.date||'');return d||(a.time||'').localeCompare(b.time||'');}
+function fd(d){return d?new Date(d+'T00:00:00').toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}):'—';}
+function ft(t){if(!t)return'—';const[h,m]=t.split(':');const hr=parseInt(h);return`${hr%12||12}:${m} ${hr>=12?'PM':'AM'}`;}
+function fmtDay(){return new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'});}
+function bdg(txt,cls){return`<span class="bdg ${cls}"><span class="bdg-dot"></span>${txt}</span>`;}
+function sttBdg(s){const c={Scheduled:'b-sch',Completed:'b-com','No Show':'b-nos',Cancelled:'b-can',Rescheduled:'b-res'};return bdg(s,c[s]||'b-can');}
+function empt(ic,msg){return`<div class="empty"><div class="empty-ico">${ic}</div>${msg}</div>`;}
+let _tt;
+function toast(msg){const el=$('toast');el.textContent=msg;el.classList.add('sh');clearTimeout(_tt);_tt=setTimeout(()=>el.classList.remove('sh'),3200);}
+document.querySelectorAll('.ov').forEach(el=>el.addEventListener('click',ev=>{if(ev.target===el)el.classList.add('h');}));
+const IC={
+  cal:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>`,
+  clk:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>`,
+  chk:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 6L9 17l-5-5"/></svg>`,
+  rs:`<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M9.5 9.5h4a1.5 1.5 0 0 1 0 3h-3a1.5 1.5 0 0 0 0 3h4"/></svg>`,
+};
+</script>
+</body>
+</html>
